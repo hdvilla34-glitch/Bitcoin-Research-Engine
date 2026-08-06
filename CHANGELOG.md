@@ -142,3 +142,25 @@ tipo de inestabilidad (efecto que aparenta existir pero cambia de
 dirección) que el split out-of-sample estaba pensado para detectar —
 el mismo patrón que afectó al hallazgo de la "ventana dorada" en
 research anterior.
+
+---
+
+## v0.4.0 — Knowledge Base
+
+### Implementado
+
+- `bre/knowledge_base.py`: consolida `data/experiments/score_log.jsonl`
+  en conocimiento consultable (última entrada por hipótesis, no
+  histórico crudo). Genera dos salidas:
+  - `data/knowledge/knowledge_base.json` (consumo programático)
+  - `docs/KNOWLEDGE_BASE.md` (lectura humana en GitHub)
+
+Cierra el ciclo completo de Fase 2: Hypothesis → Filter → Experiment →
+Scoring → Knowledge. HYP_0001 queda documentada como conocimiento
+rechazado, no solo como una línea en un log.
+
+### Limpieza
+
+- Eliminados `hypothesis.py` y `scoring_engine.py` duplicados que habían
+  quedado sueltos en la raíz del repo (fuera de `bre/`) por un upload
+  manual anterior.
