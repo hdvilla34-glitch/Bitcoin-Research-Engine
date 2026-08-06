@@ -1,0 +1,27 @@
+{
+  "generated_at_utc": "2026-07-24T04:04:05.285139+00:00",
+  "source_folder": "Google Drive: raw csv processed",
+  "symbol": "BTCUSDT",
+  "timeframe": "15m",
+  "rows": 43776,
+  "dataset_hash": "08e277b67b864d39",
+  "start": "2025-04-01 00:00:00+00:00",
+  "end": "2026-06-30 23:45:00+00:00",
+  "duplicated_timestamps_dropped": 0,
+  "known_gaps": [],
+  "columns": [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "close_time",
+    "quote_asset_volume",
+    "num_trades",
+    "taker_buy_base",
+    "taker_buy_quote",
+    "ignore",
+    "BODY_RATIO",
+    "ret_4"
+  ]
+}
