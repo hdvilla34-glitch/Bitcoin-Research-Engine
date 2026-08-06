@@ -60,3 +60,53 @@ Estado:
 Próximo objetivo:
 
 Construir el Experiment Engine y comenzar a registrar automáticamente todos los experimentos.
+
+---
+
+## v0.2.0 — Implementación real del núcleo (Fase 1 y Experiment Engine)
+
+### Contexto
+
+Hasta esta versión, el repositorio solo contenía documentación (arquitectura,
+manifiesto, roadmap). El código de Fase 1 se había corrido en Colab pero
+nunca se había subido a GitHub. Esta versión lo implementa de verdad,
+como código versionado en `bre/`.
+
+### Implementado
+
+- `bre/data_manager.py`: pipeline ZIP mensual (Binance klines, 12 columnas
+  sin encabezado, timestamps en microsegundos) a Dataset Maestro. Deduplica
+  copias idénticas de Drive por hash de contenido, detecta huecos en la
+  serie de 15m, exporta a Parquet.
+- `bre/feature_engine.py`: BODY_RATIO y ret_N (retornos hacia adelante),
+  documentando la pregunta de investigación que justifica cada feature.
+- `bre/hypothesis.py`: dataclass Hypothesis + registro de hipótesis
+  conocidas (HYP_0001).
+- `bre/filter_engine.py`: aplica la condición de una hipótesis sobre el
+  Dataset Maestro.
+- `bre/experiment_engine.py`: corre experimentos reproducibles (sample
+  size, win rate, comparación contra baseline con z-test de dos
+  proporciones, hash del dataset para trazabilidad) y los registra en
+  data/experiments/experiment_log.jsonl (append-only).
+
+### Validación end-to-end
+
+Se corrió el pipeline completo sobre el dataset real (2025-04 a
+2026-06, con hueco conocido en 2025-05): 40,800 filas.
+
+HYP_0001 re-ejecutada con el pipeline nuevo:
+
+- Sample size: 10,938 (coincide con el valor original de v0.1.0)
+- Win rate filtrado: 50.01% vs baseline 50.06%
+- p-value: 0.92 (no significativo al 95%)
+
+Conclusión honesta: HYP_0001 no muestra evidencia de continuidad.
+Se mantiene como hipótesis rechazada en esta forma; queda documentada
+como conocimiento negativo, no se descarta silenciosamente.
+
+### Datos detectados durante la carga
+
+- Hueco confirmado: falta el mes 2025-05 completo en la carpeta
+  raw csv processed de Drive.
+- Copias duplicadas (Drive sync) detectadas y deduplicadas en: 2025-09,
+  2026-02, 2026-03, 2026-04 (dos copias extra), 2026-05, 2026-06.

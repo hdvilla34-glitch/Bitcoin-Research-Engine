@@ -22,10 +22,10 @@ Construir el mejor motor de investigación cuantitativa para descubrir conocimie
 
 # Fase 2 — Investigación
 
-- [ ] Experiment Engine
+- [x] Experiment Engine
+- [x] Registro automático de experimentos (log JSONL append-only)
 - [ ] Scoring Engine
 - [ ] Knowledge Base
-- [ ] Registro automático de experimentos
 - [ ] Exportación de resultados
 
 ---
