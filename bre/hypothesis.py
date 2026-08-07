@@ -27,6 +27,7 @@ class Hypothesis:
     question: str
     condition: str  # expresión evaluable con DataFrame.query()
     target: str  # nombre de la columna objetivo, ej. "ret_4"
+    research_question: str = ""  # código de RESEARCH_QUESTIONS, ej. "RQ-003"
     priority: int = 3
     status: HypothesisStatus = HypothesisStatus.DRAFT
     notes: str = ""
@@ -38,6 +39,7 @@ class Hypothesis:
             "question": self.question,
             "condition": self.condition,
             "target": self.target,
+            "research_question": self.research_question,
             "priority": self.priority,
             "status": self.status.value,
             "notes": self.notes,
@@ -54,6 +56,7 @@ HYP_0001 = Hypothesis(
     question="¿Los cuerpos grandes presentan continuidad?",
     condition="BODY_RATIO >= 0.70",
     target="ret_4",
+    research_question="RQ-003",
     priority=1,
     status=HypothesisStatus.RECHAZADA,
     notes=(
@@ -63,3 +66,10 @@ HYP_0001 = Hypothesis(
         "p=0.43 en test, muy lejos de cualquier umbral de significancia."
     ),
 )
+
+# Registro central de todas las hipótesis del proyecto. Cada hipótesis nueva
+# se agrega aquí — es lo que el Catálogo (bre/catalog.py) recorre para
+# construir la vista consolidada por pregunta de investigación.
+HYPOTHESES: list[Hypothesis] = [
+    HYP_0001,
+]

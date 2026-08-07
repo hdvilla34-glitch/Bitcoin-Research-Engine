@@ -1,0 +1,47 @@
+{
+  "generated_at_utc": "2026-08-07T02:45:52.594314+00:00",
+  "groups": [
+    {
+      "research_question_code": "RQ-001",
+      "research_question": "¿Existen horarios del día con ventajas estadísticas persistentes?",
+      "is_covered": false,
+      "hypotheses": []
+    },
+    {
+      "research_question_code": "RQ-002",
+      "research_question": "¿La apertura de Nueva York genera un cambio estructural en el comportamiento del precio?",
+      "is_covered": false,
+      "hypotheses": []
+    },
+    {
+      "research_question_code": "RQ-003",
+      "research_question": "¿Qué variables explican mejor el movimiento de las siguientes cuatro velas?",
+      "is_covered": true,
+      "hypotheses": [
+        {
+          "code": "HYP_0001",
+          "question": "¿Los cuerpos grandes presentan continuidad?",
+          "condition": "BODY_RATIO >= 0.70",
+          "target": "ret_4",
+          "research_question": "RQ-003",
+          "priority": 1,
+          "status": "rechazada",
+          "notes": "Primera hipótesis del proyecto (CHANGELOG v0.1.0). Scoring Engine (v0.3.0): rechazada. El efecto cambia de signo entre train (+0.56pp) y test (-0.61pp) — no replica out-of-sample. p=0.43 en test, muy lejos de cualquier umbral de significancia.",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "research_question_code": "RQ-004",
+      "research_question": "¿Qué factores permanecen estables en diferentes regímenes de mercado?",
+      "is_covered": false,
+      "hypotheses": []
+    },
+    {
+      "research_question_code": "RQ-005",
+      "research_question": "¿Qué combinaciones de factores producen la mayor capacidad predictiva?",
+      "is_covered": false,
+      "hypotheses": []
+    }
+  ]
+}

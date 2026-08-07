@@ -183,3 +183,31 @@ rechazado, no solo como una línea en un log.
 → Filter Engine → Experiment Engine → Scoring Engine → Knowledge Base
 → Export Engine. Pipeline de investigación de punta a punta, con
 HYP_0001 como primer caso corrido y documentado completo.
+
+---
+
+## v0.6.0 — Catálogo de Hipótesis (Fase 3)
+
+### Implementado
+
+- `bre/research_questions.py`: registro machine-readable de RQ-001 a
+  RQ-005 (antes solo existían como texto en `docs/RESEARCH_QUESTIONS.md`,
+  sin conexión programática con las hipótesis).
+- `bre/hypothesis.py`: se agrega el campo `research_question` a la
+  dataclass `Hypothesis`, y se introduce `HYPOTHESES` como registro
+  central extensible (antes solo existía `HYP_0001` suelto). HYP_0001
+  se vincula a RQ-003 (coincide con su target `ret_4`, "las siguientes
+  cuatro velas").
+- `bre/catalog.py`: agrupa `HYPOTHESES` por `research_question`,
+  incluyendo las preguntas que aún no tienen ninguna hipótesis asociada
+  — el vacío es tan informativo como lo cubierto. Genera
+  `data/knowledge/hypothesis_catalog.json` y `docs/HYPOTHESIS_CATALOG.md`.
+
+### Hallazgo
+
+**Cobertura actual: 1/5 preguntas de investigación tienen hipótesis.**
+Solo RQ-003 está cubierta (por HYP_0001, rechazada). RQ-001 (¿existen
+horarios con ventaja estadística persistente?) es la más relevante para
+atacar a continuación: coincide directamente con research previo fuera
+de BRE (asimetría EMA21/VWAP, bloque 11:00-12:00 ET) que todavía no está
+formalizado como hipótesis dentro del framework.
