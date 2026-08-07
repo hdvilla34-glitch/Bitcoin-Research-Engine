@@ -26,7 +26,9 @@ Construir el mejor motor de investigación cuantitativa para descubrir conocimie
 - [x] Registro automático de experimentos (log JSONL append-only)
 - [x] Scoring Engine (validación out-of-sample obligatoria + umbral de effect size)
 - [x] Knowledge Base (consolida veredictos en JSON + Markdown legible)
-- [ ] Exportación de resultados
+- [x] Exportación de resultados (CSV aplanado + reporte de investigación)
+
+**Fase 2 completa.**
 
 ---
 

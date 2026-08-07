@@ -164,3 +164,22 @@ rechazado, no solo como una línea en un log.
 - Eliminados `hypothesis.py` y `scoring_engine.py` duplicados que habían
   quedado sueltos en la raíz del repo (fuera de `bre/`) por un upload
   manual anterior.
+
+---
+
+## v0.5.0 — Export Engine (cierra Fase 2)
+
+### Implementado
+
+- `bre/export_engine.py`:
+  - `export_scores_csv()`: aplana `score_log.jsonl` (train/test anidados)
+    a `data/exports/scores.csv`, una fila por hipótesis evaluada.
+  - `generate_research_report()`: combina el Data Manifest + Knowledge
+    Base en `data/exports/research_report.md`, un documento único
+    archivable/compartible.
+  - `export_all()`: corre ambas exportaciones juntas.
+
+**Fase 2 completa**: Data Manager → Feature Engine → Hypothesis Engine
+→ Filter Engine → Experiment Engine → Scoring Engine → Knowledge Base
+→ Export Engine. Pipeline de investigación de punta a punta, con
+HYP_0001 como primer caso corrido y documentado completo.
