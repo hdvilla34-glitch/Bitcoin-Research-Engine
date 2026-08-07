@@ -73,3 +73,58 @@ HYP_0001 = Hypothesis(
 HYPOTHESES: list[Hypothesis] = [
     HYP_0001,
 ]
+
+HYP_0002 = Hypothesis(
+    code="HYP_0002",
+    question=(
+        "¿Los toques de EMA21 en desacuerdo con VWAP de sesión (lados "
+        "opuestos del precio) tienen mayor tasa de rebote que los "
+        "toques alineados?"
+    ),
+    condition="TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True",
+    target="BOUNCE_SIGNAL_EMA_21",
+    research_question="RQ-003",
+    priority=1,
+    status=HypothesisStatus.RECHAZADA,
+    notes=(
+        "Formalización de un hallazgo de research previo (fuera de BRE): "
+        "+11.8pp de bounce rate en toques EMA21 con desacuerdo vs "
+        "alineados. Scoring Engine: RECHAZADA. Effect size train=-1.60pp, "
+        "test=-0.33pp (dirección OPUESTA a la esperada, sin significancia). "
+        "No replica con esta implementación — ver HYP_0003 para la versión "
+        "restringida a sesión NY, y CHANGELOG v0.7.0 para discusión de "
+        "posibles diferencias metodológicas vs el hallazgo original."
+    ),
+)
+
+HYPOTHESES.append(HYP_0002)
+
+HYP_0003 = Hypothesis(
+    code="HYP_0003",
+    question=(
+        "¿Los toques de EMA21 en desacuerdo con VWAP de sesión, DENTRO "
+        "de la ventana de sesión NY (8:00-12:00 ET), tienen mayor tasa "
+        "de rebote que los toques alineados en esa misma ventana?"
+    ),
+    condition=(
+        "TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True "
+        "and NY_HOUR >= 8 and NY_HOUR < 12"
+    ),
+    target="BOUNCE_SIGNAL_EMA_21",
+    research_question="RQ-001",
+    priority=1,
+    status=HypothesisStatus.RECHAZADA,
+    notes=(
+        "Réplica fiel del hallazgo original (que sí estaba acotado a "
+        "sesión NY), a diferencia de HYP_0002 que probó las 24h. "
+        "Scoring Engine: RECHAZADA. Effect size train=-4.68pp, "
+        "test=-1.46pp — dirección OPUESTA a la esperada (+11.8pp "
+        "original), muestra chica (378/333). No replica. Diferencias "
+        "metodológicas probables: definición exacta de 'rebote', anclaje "
+        "del VWAP de sesión (aquí: 00:00 UTC), o ventana horaria exacta. "
+        "Pendiente: revisar metodología original con Hernán antes de "
+        "descartar el hallazgo por completo."
+    ),
+)
+
+HYPOTHESES.append(HYP_0003)

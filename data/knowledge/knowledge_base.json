@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-06T03:15:44.163465+00:00",
+  "generated_at_utc": "2026-08-07T02:57:15.117685+00:00",
   "entries": [
     {
       "hypothesis_code": "HYP_0001",
@@ -17,6 +17,38 @@
       "test_win_rate_delta_pp": -0.6054,
       "test_p_value": 0.4255933295118275,
       "last_scored_utc": "2026-08-06T02:55:22.554022+00:00"
+    },
+    {
+      "hypothesis_code": "HYP_0002",
+      "question": "¿Los toques de EMA21 en desacuerdo con VWAP de sesión (lados opuestos del precio) tienen mayor tasa de rebote que los toques alineados?",
+      "condition": "TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True",
+      "target": "BOUNCE_SIGNAL_EMA_21",
+      "verdict": "rechazada",
+      "reasons": [
+        "Effect size: train=-1.600pp, test=-0.325pp (mínimo exigido: ±2.0pp)",
+        "p-value en test: 0.8035 (informacional<0.05, validada<0.01)",
+        "No cumple los criterios mínimos de evidencia."
+      ],
+      "train_win_rate_delta_pp": -1.6004,
+      "test_win_rate_delta_pp": -0.3254,
+      "test_p_value": 0.8035407818754376,
+      "last_scored_utc": "2026-08-07T02:55:31.978076+00:00"
+    },
+    {
+      "hypothesis_code": "HYP_0003",
+      "question": "¿Los toques de EMA21 en desacuerdo con VWAP de sesión, DENTRO de la ventana de sesión NY (8:00-12:00 ET), tienen mayor tasa de rebote que los toques alineados en esa misma ventana?",
+      "condition": "TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True and NY_HOUR >= 8 and NY_HOUR < 12",
+      "target": "BOUNCE_SIGNAL_EMA_21",
+      "verdict": "rechazada",
+      "reasons": [
+        "Effect size: train=-4.681pp, test=-1.460pp (mínimo exigido: ±2.0pp)",
+        "p-value en test: 0.6035 (informacional<0.05, validada<0.01)",
+        "No cumple los criterios mínimos de evidencia."
+      ],
+      "train_win_rate_delta_pp": -4.681,
+      "test_win_rate_delta_pp": -1.4599,
+      "test_p_value": 0.6035275323822256,
+      "last_scored_utc": "2026-08-07T02:56:33.383651+00:00"
     }
   ]
 }

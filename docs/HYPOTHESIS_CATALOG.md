@@ -2,13 +2,14 @@
 
 Generado automáticamente por `bre/catalog.py`. No editar a mano.
 
-**Cobertura:** 1/5 preguntas de investigación tienen al menos una hipótesis.
+**Cobertura:** 2/5 preguntas de investigación tienen al menos una hipótesis.
 
-## ⚪ RQ-001 — ¿Existen horarios del día con ventajas estadísticas persistentes?
+## 🟡 RQ-001 — ¿Existen horarios del día con ventajas estadísticas persistentes?
 
 _Objetivo: Determinar si ciertas franjas horarias presentan diferencias estadísticamente significativas en retorno, volatilidad o volumen._
 
-**Sin hipótesis todavía.** Pregunta abierta.
+- **HYP_0003** [rechazada] — ¿Los toques de EMA21 en desacuerdo con VWAP de sesión, DENTRO de la ventana de sesión NY (8:00-12:00 ET), tienen mayor tasa de rebote que los toques alineados en esa misma ventana?
+  - `TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True and NY_HOUR >= 8 and NY_HOUR < 12` → target `BOUNCE_SIGNAL_EMA_21`
 
 ---
 
@@ -22,6 +23,8 @@ _Objetivo: Determinar si ciertas franjas horarias presentan diferencias estadís
 
 - **HYP_0001** [rechazada] — ¿Los cuerpos grandes presentan continuidad?
   - `BODY_RATIO >= 0.70` → target `ret_4`
+- **HYP_0002** [rechazada] — ¿Los toques de EMA21 en desacuerdo con VWAP de sesión (lados opuestos del precio) tienen mayor tasa de rebote que los toques alineados?
+  - `TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True` → target `BOUNCE_SIGNAL_EMA_21`
 
 ---
 

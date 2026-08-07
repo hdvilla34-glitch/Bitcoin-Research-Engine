@@ -211,3 +211,59 @@ horarios con ventaja estadística persistente?) es la más relevante para
 atacar a continuación: coincide directamente con research previo fuera
 de BRE (asimetría EMA21/VWAP, bloque 11:00-12:00 ET) que todavía no está
 formalizado como hipótesis dentro del framework.
+
+---
+
+## v0.7.0 — HYP_0002 y HYP_0003: EMA21/VWAP no replica
+
+### Contexto
+
+Se intentó formalizar dentro de BRE un hallazgo de research previo
+(fuera del framework): toques de EMA21 en desacuerdo con VWAP de sesión
+mostraban ~+11.8pp más bounce rate que toques alineados, con el bloque
+11:00-12:00 ET como mejor ventana.
+
+### Features nuevas (bre/feature_engine.py)
+
+- `add_ema()`: EMA de cualquier span (usado con span=21).
+- `add_session_vwap()`: VWAP anclado por sesión — **ASUNCIÓN
+  METODOLÓGICA**: se reinicia a las 00:00 UTC. Puede no coincidir con
+  el anclaje usado en el research original.
+- `add_ema_vwap_disagreement()`: True cuando EMA21 y VWAP quedan en
+  lados opuestos del precio.
+- `add_ema_touch_and_bounce()`: detecta toques de EMA21 y clasifica el
+  resultado 4 velas después como "rebote" (+1, continúa la tendencia
+  previa) o "ruptura" (-1).
+- `add_ny_hour()`: hora en zona horaria America/New_York (maneja DST).
+
+### HYP_0002 (24h, todas las horas) — RECHAZADA
+
+- Effect size: train -1.60pp, test -0.33pp
+- p-value test: 0.80
+- Dirección OPUESTA a la esperada, sin significancia.
+
+### HYP_0003 (restringida a sesión NY 8:00-12:00 ET) — RECHAZADA
+
+- Effect size: train -4.68pp, test -1.46pp
+- p-value test: 0.60
+- Muestra pequeña (378/333 casos). Dirección OPUESTA a la esperada.
+
+### Conclusión honesta
+
+**Ninguna de las dos formalizaciones replica el hallazgo original.**
+Esto NO se reporta como "el hallazgo original estaba mal" — se reporta
+como "esta implementación específica no lo replica", que es una
+afirmación más débil y más honesta. Diferencias metodológicas
+candidatas entre esta implementación y el análisis original:
+
+1. Definición exacta de "rebote" (aquí: continuidad de tendencia previa
+   4 velas después; el análisis original pudo usar otra definición,
+   ej. magnitud de reacción o un umbral mínimo de movimiento).
+2. Anclaje del VWAP de sesión (aquí: 00:00 UTC).
+3. Definición exacta de "toque" de EMA21.
+
+**Pendiente**: revisar la metodología original con Hernán (probablemente
+en un notebook de Colab) antes de descartar el hallazgo por completo.
+Hasta entonces, ambas hipótesis quedan documentadas como rechazadas
+con esta implementación específica — conocimiento negativo válido,
+no un callejón sin salida.

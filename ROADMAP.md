@@ -34,7 +34,7 @@ Construir el mejor motor de investigación cuantitativa para descubrir conocimie
 
 # Fase 3 — Descubrimiento
 
-- [x] Catálogo de hipótesis (agrupa por research_question, expone cobertura)
+- [x] Catálogo de hipótesis (agrupa por research_question, expone cobertura — 2/5 RQ cubiertas)
 - [ ] Comparador de hipótesis
 - [ ] Ranking de evidencia
 - [ ] Dashboard científico

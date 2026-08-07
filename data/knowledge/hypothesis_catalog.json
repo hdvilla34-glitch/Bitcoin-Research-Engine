@@ -1,11 +1,23 @@
 {
-  "generated_at_utc": "2026-08-07T02:45:52.594314+00:00",
+  "generated_at_utc": "2026-08-07T02:57:15.118336+00:00",
   "groups": [
     {
       "research_question_code": "RQ-001",
       "research_question": "¿Existen horarios del día con ventajas estadísticas persistentes?",
-      "is_covered": false,
-      "hypotheses": []
+      "is_covered": true,
+      "hypotheses": [
+        {
+          "code": "HYP_0003",
+          "question": "¿Los toques de EMA21 en desacuerdo con VWAP de sesión, DENTRO de la ventana de sesión NY (8:00-12:00 ET), tienen mayor tasa de rebote que los toques alineados en esa misma ventana?",
+          "condition": "TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True and NY_HOUR >= 8 and NY_HOUR < 12",
+          "target": "BOUNCE_SIGNAL_EMA_21",
+          "research_question": "RQ-001",
+          "priority": 1,
+          "status": "rechazada",
+          "notes": "Réplica fiel del hallazgo original (que sí estaba acotado a sesión NY), a diferencia de HYP_0002 que probó las 24h. Scoring Engine: RECHAZADA. Effect size train=-4.68pp, test=-1.46pp — dirección OPUESTA a la esperada (+11.8pp original), muestra chica (378/333). No replica. Diferencias metodológicas probables: definición exacta de 'rebote', anclaje del VWAP de sesión (aquí: 00:00 UTC), o ventana horaria exacta. Pendiente: revisar metodología original con Hernán antes de descartar el hallazgo por completo.",
+          "tags": []
+        }
+      ]
     },
     {
       "research_question_code": "RQ-002",
@@ -27,6 +39,17 @@
           "priority": 1,
           "status": "rechazada",
           "notes": "Primera hipótesis del proyecto (CHANGELOG v0.1.0). Scoring Engine (v0.3.0): rechazada. El efecto cambia de signo entre train (+0.56pp) y test (-0.61pp) — no replica out-of-sample. p=0.43 en test, muy lejos de cualquier umbral de significancia.",
+          "tags": []
+        },
+        {
+          "code": "HYP_0002",
+          "question": "¿Los toques de EMA21 en desacuerdo con VWAP de sesión (lados opuestos del precio) tienen mayor tasa de rebote que los toques alineados?",
+          "condition": "TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True",
+          "target": "BOUNCE_SIGNAL_EMA_21",
+          "research_question": "RQ-003",
+          "priority": 1,
+          "status": "rechazada",
+          "notes": "Formalización de un hallazgo de research previo (fuera de BRE): +11.8pp de bounce rate en toques EMA21 con desacuerdo vs alineados. Scoring Engine: RECHAZADA. Effect size train=-1.60pp, test=-0.33pp (dirección OPUESTA a la esperada, sin significancia). No replica con esta implementación — ver HYP_0003 para la versión restringida a sesión NY, y CHANGELOG v0.7.0 para discusión de posibles diferencias metodológicas vs el hallazgo original.",
           "tags": []
         }
       ]
