@@ -267,3 +267,71 @@ en un notebook de Colab) antes de descartar el hallazgo por completo.
 Hasta entonces, ambas hipótesis quedan documentadas como rechazadas
 con esta implementación específica — conocimiento negativo válido,
 no un callejón sin salida.
+
+---
+
+## v0.8.0 — Sin indicadores: pivot a calendario/sesión (Fase 3/4)
+
+### Contexto
+
+Decisión de producto: mientras dure esta fase, BRE no investiga con
+indicadores técnicos (EMA, VWAP, RSI, ADX, etc.). Se documenta como
+**Regla 5** en `MANIFESTO.md`. El foco pasa a efectos de calendario y
+estructura de sesión — precio, volumen y tiempo crudos, nada derivado
+de un indicador.
+
+### Retirado (archivado, no borrado — Regla 4)
+
+- `bre/feature_engine.py`: se eliminan `add_ema()`, `add_session_vwap()`,
+  `add_ema_vwap_disagreement()`, `add_ema_touch_and_bounce()`.
+- `bre/hypothesis.py`: HYP_0002 y HYP_0003 salen de `HYPOTHESES`
+  (catálogo activo) y pasan a `ARCHIVED_HYPOTHESES`. Su evidencia
+  (RECHAZADAS, Scoring Engine v0.7.0) sigue intacta en
+  `data/experiments/score_log.jsonl` y `docs/KNOWLEDGE_BASE.md`.
+
+### Implementado
+
+- `bre/feature_engine.py`, reescrito sobre 3 fuentes únicamente
+  (precio OHLC crudo, volumen/actividad cruda, tiempo):
+  - `add_forward_returns()` / `add_backward_returns()`: generaliza
+    `ret_4` a cualquier horizonte, hacia adelante y hacia atrás.
+  - `add_candle_geometry()`: RANGE_PCT, wicks, DIRECTION — geometría
+    de vela adicional a BODY_RATIO, sin indicadores.
+  - `add_taker_buy_ratio()`: presión compradora/vendedora usando
+    `taker_buy_base` (dato crudo de los klines de Binance, cargado
+    desde el inicio del proyecto pero nunca usado).
+  - `add_calendar()`: WEEKDAY, IS_MONDAY/FRIDAY/WEEKEND, UTC_HOUR,
+    NY_HOUR, WEEK_OF_YEAR, MONTH.
+  - `add_session_tag()`: SESSION (ASIA/LONDON/NEWYORK/OFF_HOURS) por
+    bandas fijas en UTC (asunción metodológica documentada en el
+    código, igual que se hizo con el VWAP en v0.7.0).
+  - `add_session_relative()`: SESSION_OPEN, RET_SINCE_SESSION_OPEN,
+    SESSION_HIGH/LOW_SO_FAR (running, sin look-ahead).
+  - `add_prior_session_return()`: PREV_SESSION_RET y
+    PREV_SESSION_DIRECTION — retorno y dirección de la sesión
+    inmediatamente anterior, la variable clave para hipótesis tipo
+    "Monday Asia effect".
+  - `build_features()`: corre todo el pipeline en el orden correcto
+    de una sola llamada (evita el error histórico de orden manual en
+    Colab).
+- `bre/hypothesis.py`:
+  - `HYP_0004`: ¿la sesión previa predice la dirección de la sesión
+    siguiente, en general (todos los días)? RQ-006.
+  - `HYP_0005`: la misma pregunta, acotada a lunes ("Monday Asia
+    effect" propiamente dicho). RQ-006. Se prueba después de HYP_0004
+    a propósito — el caso general antes que el específico.
+- `bre/research_questions.py` + `docs/RESEARCH_QUESTIONS.md`: nueva
+  RQ-006 (efectos de calendario / secuencia de sesiones).
+
+### Validación
+
+Pipeline completo (`build_features` → `HYPOTHESES` → `filter_engine`
+→ `experiment_engine` → `scoring_engine` → `catalog` → `knowledge_base`
+→ `export_engine`) corrido de punta a punta sobre un dataset sintético
+de control para confirmar que no rompe nada. HYP_0004/HYP_0005 quedan
+en estado `draft`, listas para correr sobre el Dataset Maestro real —
+no se generó evidencia falsa en `score_log.jsonl`.
+
+### Pendiente (próximo paso)
+
+Correr HYP_0004 y HYP_0005 sobre el dataset real vía Scoring Engine.

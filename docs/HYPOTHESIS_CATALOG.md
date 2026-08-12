@@ -2,14 +2,13 @@
 
 Generado automáticamente por `bre/catalog.py`. No editar a mano.
 
-**Cobertura:** 2/5 preguntas de investigación tienen al menos una hipótesis.
+**Cobertura:** 2/6 preguntas de investigación tienen al menos una hipótesis.
 
-## 🟡 RQ-001 — ¿Existen horarios del día con ventajas estadísticas persistentes?
+## ⚪ RQ-001 — ¿Existen horarios del día con ventajas estadísticas persistentes?
 
 _Objetivo: Determinar si ciertas franjas horarias presentan diferencias estadísticamente significativas en retorno, volatilidad o volumen._
 
-- **HYP_0003** [rechazada] — ¿Los toques de EMA21 en desacuerdo con VWAP de sesión, DENTRO de la ventana de sesión NY (8:00-12:00 ET), tienen mayor tasa de rebote que los toques alineados en esa misma ventana?
-  - `TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True and NY_HOUR >= 8 and NY_HOUR < 12` → target `BOUNCE_SIGNAL_EMA_21`
+**Sin hipótesis todavía.** Pregunta abierta.
 
 ---
 
@@ -23,8 +22,6 @@ _Objetivo: Determinar si ciertas franjas horarias presentan diferencias estadís
 
 - **HYP_0001** [rechazada] — ¿Los cuerpos grandes presentan continuidad?
   - `BODY_RATIO >= 0.70` → target `ret_4`
-- **HYP_0002** [rechazada] — ¿Los toques de EMA21 en desacuerdo con VWAP de sesión (lados opuestos del precio) tienen mayor tasa de rebote que los toques alineados?
-  - `TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True` → target `BOUNCE_SIGNAL_EMA_21`
 
 ---
 
@@ -37,5 +34,16 @@ _Objetivo: Determinar si ciertas franjas horarias presentan diferencias estadís
 ## ⚪ RQ-005 — ¿Qué combinaciones de factores producen la mayor capacidad predictiva?
 
 **Sin hipótesis todavía.** Pregunta abierta.
+
+---
+
+## 🟡 RQ-006 — ¿Existen efectos de día de la semana o de secuencia entre sesiones (Asia→Londres→NY) con ventaja estadística persistente, ej. 'Monday Asia effect'?
+
+_Objetivo: Determinar si la dirección de una sesión predice la dirección de la sesión siguiente, y si ese efecto (si existe) es uniforme entre días de la semana o se concentra en días específicos (ej. lunes, tras el fin de semana de menor liquidez)._
+
+- **HYP_0004** [draft] — ¿La dirección de una sesión predice la dirección de la sesión inmediatamente siguiente (Asia→Londres, Londres→NY), en general, en cualquier día de la semana?
+  - `PREV_SESSION_DIRECTION != 0` → target `ret_4`
+- **HYP_0005** [draft] — ¿El efecto de HYP_0004 (sesión previa predice la siguiente) es más fuerte específicamente los lunes — 'Monday Asia effect' (la sesión Asia del lunes predice la sesión Londres del mismo lunes)?
+  - `PREV_SESSION_DIRECTION != 0 and WEEKDAY == 0` → target `ret_4`
 
 ---

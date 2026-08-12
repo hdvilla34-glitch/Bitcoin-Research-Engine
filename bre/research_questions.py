@@ -49,6 +49,21 @@ RESEARCH_QUESTIONS: list[ResearchQuestion] = [
         code="RQ-005",
         question="¿Qué combinaciones de factores producen la mayor capacidad predictiva?",
     ),
+    ResearchQuestion(
+        code="RQ-006",
+        question=(
+            "¿Existen efectos de día de la semana o de secuencia entre "
+            "sesiones (Asia→Londres→NY) con ventaja estadística "
+            "persistente, ej. 'Monday Asia effect'?"
+        ),
+        objective=(
+            "Determinar si la dirección de una sesión predice la "
+            "dirección de la sesión siguiente, y si ese efecto (si "
+            "existe) es uniforme entre días de la semana o se concentra "
+            "en días específicos (ej. lunes, tras el fin de semana de "
+            "menor liquidez)."
+        ),
+    ),
 ]
 
 

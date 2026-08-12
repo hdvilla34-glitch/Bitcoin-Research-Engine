@@ -1,23 +1,11 @@
 {
-  "generated_at_utc": "2026-08-07T02:57:15.118336+00:00",
+  "generated_at_utc": "2026-08-12T03:08:18.676980+00:00",
   "groups": [
     {
       "research_question_code": "RQ-001",
       "research_question": "¿Existen horarios del día con ventajas estadísticas persistentes?",
-      "is_covered": true,
-      "hypotheses": [
-        {
-          "code": "HYP_0003",
-          "question": "¿Los toques de EMA21 en desacuerdo con VWAP de sesión, DENTRO de la ventana de sesión NY (8:00-12:00 ET), tienen mayor tasa de rebote que los toques alineados en esa misma ventana?",
-          "condition": "TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True and NY_HOUR >= 8 and NY_HOUR < 12",
-          "target": "BOUNCE_SIGNAL_EMA_21",
-          "research_question": "RQ-001",
-          "priority": 1,
-          "status": "rechazada",
-          "notes": "Réplica fiel del hallazgo original (que sí estaba acotado a sesión NY), a diferencia de HYP_0002 que probó las 24h. Scoring Engine: RECHAZADA. Effect size train=-4.68pp, test=-1.46pp — dirección OPUESTA a la esperada (+11.8pp original), muestra chica (378/333). No replica. Diferencias metodológicas probables: definición exacta de 'rebote', anclaje del VWAP de sesión (aquí: 00:00 UTC), o ventana horaria exacta. Pendiente: revisar metodología original con Hernán antes de descartar el hallazgo por completo.",
-          "tags": []
-        }
-      ]
+      "is_covered": false,
+      "hypotheses": []
     },
     {
       "research_question_code": "RQ-002",
@@ -40,17 +28,6 @@
           "status": "rechazada",
           "notes": "Primera hipótesis del proyecto (CHANGELOG v0.1.0). Scoring Engine (v0.3.0): rechazada. El efecto cambia de signo entre train (+0.56pp) y test (-0.61pp) — no replica out-of-sample. p=0.43 en test, muy lejos de cualquier umbral de significancia.",
           "tags": []
-        },
-        {
-          "code": "HYP_0002",
-          "question": "¿Los toques de EMA21 en desacuerdo con VWAP de sesión (lados opuestos del precio) tienen mayor tasa de rebote que los toques alineados?",
-          "condition": "TOUCHES_EMA_21 == True and EMA_VWAP_DISAGREEMENT == True",
-          "target": "BOUNCE_SIGNAL_EMA_21",
-          "research_question": "RQ-003",
-          "priority": 1,
-          "status": "rechazada",
-          "notes": "Formalización de un hallazgo de research previo (fuera de BRE): +11.8pp de bounce rate en toques EMA21 con desacuerdo vs alineados. Scoring Engine: RECHAZADA. Effect size train=-1.60pp, test=-0.33pp (dirección OPUESTA a la esperada, sin significancia). No replica con esta implementación — ver HYP_0003 para la versión restringida a sesión NY, y CHANGELOG v0.7.0 para discusión de posibles diferencias metodológicas vs el hallazgo original.",
-          "tags": []
         }
       ]
     },
@@ -65,6 +42,44 @@
       "research_question": "¿Qué combinaciones de factores producen la mayor capacidad predictiva?",
       "is_covered": false,
       "hypotheses": []
+    },
+    {
+      "research_question_code": "RQ-006",
+      "research_question": "¿Existen efectos de día de la semana o de secuencia entre sesiones (Asia→Londres→NY) con ventaja estadística persistente, ej. 'Monday Asia effect'?",
+      "is_covered": true,
+      "hypotheses": [
+        {
+          "code": "HYP_0004",
+          "question": "¿La dirección de una sesión predice la dirección de la sesión inmediatamente siguiente (Asia→Londres, Londres→NY), en general, en cualquier día de la semana?",
+          "condition": "PREV_SESSION_DIRECTION != 0",
+          "target": "ret_4",
+          "research_question": "RQ-006",
+          "priority": 1,
+          "status": "draft",
+          "notes": "Se prueba primero el efecto GENERAL (todos los días) antes de restringir a lunes en HYP_0005 — probar lo general primero es más honesto metodológicamente que ir directo al caso específico que se quiere encontrar (el mismo error que ya cometimos una vez con HYP_0002/0003 al formalizar un hallazgo puntual sin antes chequear su versión general).",
+          "tags": [
+            "calendario",
+            "sesion",
+            "sin_indicadores"
+          ]
+        },
+        {
+          "code": "HYP_0005",
+          "question": "¿El efecto de HYP_0004 (sesión previa predice la siguiente) es más fuerte específicamente los lunes — 'Monday Asia effect' (la sesión Asia del lunes predice la sesión Londres del mismo lunes)?",
+          "condition": "PREV_SESSION_DIRECTION != 0 and WEEKDAY == 0",
+          "target": "ret_4",
+          "research_question": "RQ-006",
+          "priority": 1,
+          "status": "draft",
+          "notes": "Versión acotada a lunes de HYP_0004. Corré HYP_0004 primero: si el efecto general no existe, un resultado positivo acá con muestra mucho más chica (1/7 de los días) es más sospechoso de sobreajuste por multiple testing que evidencia real — documentarlo así explícitamente si el Scoring Engine lo marca como prometedor o validado.",
+          "tags": [
+            "calendario",
+            "sesion",
+            "monday_effect",
+            "sin_indicadores"
+          ]
+        }
+      ]
     }
   ]
 }

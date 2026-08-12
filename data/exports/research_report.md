@@ -1,6 +1,6 @@
 # Reporte de Investigación — BRE
 
-_Generado: 2026-08-07T02:57:15.128398+00:00_
+_Generado: 2026-08-12T03:08:45.158202+00:00_
 
 ## Dataset usado
 

@@ -127,6 +127,24 @@ Nunca reemplaza conocimiento.
 
 ---
 
+## Regla 5 (vigente desde 2026-08-11)
+
+Por ahora, BRE no investiga con indicadores técnicos (EMA, VWAP, RSI,
+ADX, etc.).
+
+La investigación se enfoca en efectos de calendario, sesión y precio
+crudo (OHLCV) — nada que dependa de un indicador construido sobre el
+precio.
+
+Esta regla es de fase, no permanente. Si una hipótesis específica
+justifica más adelante un indicador, se reintroduce de forma explícita
+y documentada — no por costumbre.
+
+Hipótesis previas basadas en indicadores no se borran: quedan
+ARCHIVADAS (ver bre/hypothesis.py), no ACTIVAS.
+
+---
+
 # Unidad Fundamental
 
 La unidad de trabajo de BRE no es un indicador.
