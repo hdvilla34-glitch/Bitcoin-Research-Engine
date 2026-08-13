@@ -150,6 +150,62 @@ HYPOTHESES.append(HYP_0005)
 
 
 # ---------------------------------------------------------------------
+# HYP_0006 — "Monday Asia Open Effect" (calibrada sobre evidencia externa)
+# ---------------------------------------------------------------------
+# A diferencia de HYP_0004/0005 (bandas genéricas ASIA/LONDON/NEWYORK
+# en UTC, definición propia de BRE), HYP_0006 usa la ventana horaria
+# EXACTA que reporta Concretum Research en "Seasonality in Bitcoin
+# Intraday Trend Trading" (ene-2026): 24h desde la apertura de la Bolsa
+# de Tokio, que — al no tener Japón horario de verano — equivale
+# exactamente a "todo el lunes en UTC" (ver nota metodológica en
+# feature_engine.add_tokyo_open_window).
+#
+# Tampoco mide lo mismo que HYP_0004/0005: esas miden DIRECCIÓN
+# (¿sesión previa predice el signo de la siguiente?). Concretum mide
+# INTENSIDAD DE TENDENCIA (¿hay más movimiento persistente/explotable
+# en esa ventana?), usando un benchmark de trend-following long-short
+# — que es un indicador, y por Regla 5 no lo replicamos. HYP_0006 usa
+# el análogo sin indicadores más cercano: la magnitud absoluta del
+# retorno (ABS_RET_4), como proxy crudo de "cuánto se mueve el precio"
+# en esa ventana vs. el resto de la semana.
+
+HYP_0006 = Hypothesis(
+    code="HYP_0006",
+    question=(
+        "¿La magnitud del movimiento de precio (|ret_4|) es mayor "
+        "durante la ventana de apertura de Tokio (24h desde lunes 00:00 "
+        "UTC) que en el resto de la semana — el 'Monday Asia Open "
+        "Effect' documentado externamente por Concretum Research?"
+    ),
+    condition="IN_TOKYO_OPEN_WINDOW == True",
+    target="ABS_RET_4",
+    research_question="RQ-006",
+    priority=1,
+    status=HypothesisStatus.DRAFT,
+    notes=(
+        "Ventana calibrada sobre evidencia externa (Concretum Research, "
+        "'Seasonality in Bitcoin Intraday Trend Trading', ene-2026: "
+        "https://concretumgroup.com/seasonality-in-bitcoin-intraday-trend-trading/), "
+        "no sobre una banda genérica propia. Mide intensidad de "
+        "movimiento (ABS_RET_4), no dirección — es una pregunta "
+        "distinta a HYP_0004/0005, más cercana a lo que Concretum "
+        "reportó. Antes de considerarla validada: (1) correr bootstrap "
+        "sobre los retornos de test, no solo p-value (ver 'Trading "
+        "Strategy Evaluation Using p-Values and Bootstrapping' de "
+        "Concretum); (2) si da positiva, verificar las velas de "
+        "apertura de sesión (00:00 UTC lunes) contra un segundo "
+        "proveedor de datos (Bitstamp/Kraken) antes de confiar en el "
+        "resultado — ver 'Backtesting Data Quality' de Concretum sobre "
+        "cómo un solo proveedor puede inflar o inventar un efecto en "
+        "los timestamps límite."
+    ),
+    tags=("calendario", "sesion", "monday_effect", "tokyo_open", "sin_indicadores"),
+)
+
+HYPOTHESES.append(HYP_0006)
+
+
+# ---------------------------------------------------------------------
 # ARCHIVADAS — retiradas del catálogo activo el 2026-08-11
 # ---------------------------------------------------------------------
 # Estudio de EMA21/VWAP. Se conserva el código y toda la evidencia
