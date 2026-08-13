@@ -335,3 +335,60 @@ no se generó evidencia falsa en `score_log.jsonl`.
 ### Pendiente (próximo paso)
 
 Correr HYP_0004 y HYP_0005 sobre el dataset real vía Scoring Engine.
+
+---
+
+## v0.8.1 — HYP_0006: "Monday Asia Open Effect" calibrado sobre evidencia externa
+
+### Contexto
+
+Concretum Research publicó "Seasonality in Bitcoin Intraday Trend
+Trading" (ene-2026), documentando un "Monday Asia Open Effect" en BTC:
+mayor intensidad de tendencia desde la apertura de la Bolsa de Tokio
+(TSE) hasta ~24h después. Su ventana horaria es más precisa que la
+banda genérica `ASIA` (00:00-08:00 UTC) usada por HYP_0004/0005, y
+además mide algo distinto: intensidad/magnitud de movimiento, no
+dirección.
+
+### Hallazgo metodológico (antes de programar nada)
+
+La apertura de TSE (9:00 JST) es un instante FIJO en UTC — 00:00 UTC —
+porque Japón no tiene horario de verano. La descripción de Concretum
+("domingo 19:00 ET invierno / 20:00 ET verano") es la misma marca UTC
+vista a través del DST de EE.UU., no dos ventanas distintas. Por lo
+tanto la ventana completa (24h desde la apertura de Tokio) equivale
+exactamente a **"todo el lunes en UTC"** — no hace falta anclar a
+NY_HOUR (que sí arrastra la ambigüedad de DST).
+
+### Implementado
+
+- `bre/feature_engine.py`:
+  - `add_tokyo_open_window()`: `IN_TOKYO_OPEN_WINDOW` = `WEEKDAY == 0`
+    (lunes UTC), con la nota metodológica completa sobre por qué UTC
+    y no ET.
+  - `add_return_magnitude()`: `ABS_RET_N` = `|ret_N|` para cada
+    horizonte — proxy sin indicadores de "intensidad de movimiento",
+    el análogo más cercano posible al benchmark de trend-following
+    long-short que usa Concretum (que sí es un indicador y por Regla 5
+    no se replica).
+  - `build_features()` actualizado con ambos pasos al final.
+- `bre/hypothesis.py`: `HYP_0006` — ¿`ABS_RET_4` es mayor dentro de
+  `IN_TOKYO_OPEN_WINDOW` que fuera? RQ-006. Notas incluyen dos
+  validaciones adicionales recomendadas antes de dar por válido un
+  resultado positivo: bootstrap sobre retornos de test (no solo
+  p-value) y verificación cruzada de proveedor de datos en los
+  timestamps de apertura de sesión — ambas tomadas de research de
+  Concretum sobre metodología de evaluación de estrategias.
+
+### Validación
+
+`IN_TOKYO_OPEN_WINDOW` verificado por asserción directa contra
+`dayofweek == 0` en UTC sobre dataset sintético de control (17,377
+velas, cobertura 14.36% vs. 14.29% esperado teórico = 1/7). Pipeline
+completo corrido de punta a punta sin `log_score()` — `score_log.jsonl`
+no se tocó.
+
+### Pendiente (próximo paso)
+
+Correr HYP_0004, HYP_0005 y HYP_0006 sobre el Dataset Maestro real vía
+Scoring Engine.

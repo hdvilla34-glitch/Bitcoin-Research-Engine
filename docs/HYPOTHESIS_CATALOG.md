@@ -45,5 +45,7 @@ _Objetivo: Determinar si la dirección de una sesión predice la dirección de l
   - `PREV_SESSION_DIRECTION != 0` → target `ret_4`
 - **HYP_0005** [draft] — ¿El efecto de HYP_0004 (sesión previa predice la siguiente) es más fuerte específicamente los lunes — 'Monday Asia effect' (la sesión Asia del lunes predice la sesión Londres del mismo lunes)?
   - `PREV_SESSION_DIRECTION != 0 and WEEKDAY == 0` → target `ret_4`
+- **HYP_0006** [draft] — ¿La magnitud del movimiento de precio (|ret_4|) es mayor durante la ventana de apertura de Tokio (24h desde lunes 00:00 UTC) que en el resto de la semana — el 'Monday Asia Open Effect' documentado externamente por Concretum Research?
+  - `IN_TOKYO_OPEN_WINDOW == True` → target `ABS_RET_4`
 
 ---
