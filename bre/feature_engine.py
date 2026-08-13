@@ -269,6 +269,62 @@ def add_prior_session_return(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------
+# Ventana "Monday Asia Open Effect" (calibrada sobre evidencia externa)
+# ---------------------------------------------------------------------
+# Concretum Research ("Seasonality in Bitcoin Intraday Trend Trading",
+# ene-2026) documenta que la intensidad de tendencia en BTC repunta
+# desde el domingo ~19:00 ET hasta ~24h dentro del lunes, alineado con
+# la apertura de la Bolsa de Tokio (TSE). Esa hora ET aparece descrita
+# como "19:00 (invierno) / 20:00 (verano)" porque Japón NO tiene
+# horario de verano pero EE.UU. sí — el ancla real es un instante FIJO
+# en UTC, no en ET.
+#
+# Cálculo: 9:00 JST (apertura TSE) = 00:00 UTC, siempre. Domingo 19:00
+# EST (invierno, UTC-5) y domingo 20:00 EDT (verano, UTC-4) son la
+# MISMA marca UTC: lunes 00:00 UTC. Por eso la ventana completa —
+# "desde la apertura de Tokio hasta ~24h después"— es simplemente
+# "todo el lunes en UTC". No hace falta anclar a NY_HOUR (que sí
+# arrastra la ambigüedad de DST); WEEKDAY (UTC) ya resuelve esto sin
+# aproximaciones.
+
+def add_tokyo_open_window(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    IN_TOKYO_OPEN_WINDOW: True si la vela cae en la ventana de 24h que
+    arranca en la apertura de Tokio (lunes 00:00 UTC) — equivalente a
+    "todo el lunes en UTC". Requiere add_calendar() antes (usa WEEKDAY).
+    Ver la nota metodológica arriba sobre por qué UTC y no NY_HOUR/ET.
+    """
+    df = df.copy()
+    if "WEEKDAY" not in df.columns:
+        raise ValueError("Corré add_calendar() antes de add_tokyo_open_window().")
+    df["IN_TOKYO_OPEN_WINDOW"] = df["WEEKDAY"] == 0
+    return df
+
+
+def add_return_magnitude(
+    df: pd.DataFrame, periods: tuple[int, ...] = (1, 4, 8, 16)
+) -> pd.DataFrame:
+    """
+    ABS_RET_N: magnitud absoluta de ret_N (requiere add_forward_returns()
+    antes, con los mismos periods). Proxy de "intensidad de movimiento"
+    100% sin indicadores — el análogo más cercano que podemos construir,
+    sin Donchian ni ningún indicador de tendencia, al benchmark de
+    trend-following long-short que usa Concretum para medir régimen de
+    tendencia vs. reversión. No mide dirección, mide cuánto se mueve.
+    """
+    df = df.copy()
+    for n in periods:
+        col = f"ret_{n}"
+        if col not in df.columns:
+            raise ValueError(
+                f"Falta la columna {col}. Corré add_forward_returns() antes "
+                "de add_return_magnitude(), con los mismos periods."
+            )
+        df[f"ABS_RET_{n}"] = df[col].abs()
+    return df
+
+
+# ---------------------------------------------------------------------
 # Pipeline completo
 # ---------------------------------------------------------------------
 
@@ -291,4 +347,6 @@ def build_features(
     df = add_session_tag(df)
     df = add_session_relative(df)
     df = add_prior_session_return(df)
+    df = add_tokyo_open_window(df)
+    df = add_return_magnitude(df, forward_periods)
     return df
